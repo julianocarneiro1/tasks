@@ -27,36 +27,26 @@ public class Task {
         return this;
     }
 
-    public String getTitle() {
-        return title;
+    public Task insert() {
+        return builderFrom(this)
+                .withState(TaskState.INSERT)
+                .build();
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getTitle() {
+        return title;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getPriority() {
         return priority;
     }
 
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
     public TaskState getState() {
         return state;
-    }
-
-    public void setState(TaskState state) {
-        this.state = state;
     }
 
     public static Builder builder() {
