@@ -4,6 +4,8 @@ import br.com.udemy.tasks.model.TaskState;
 
 public class TaskDTO {
 
+    private String id;
+
     private String title;
 
     private String description;
@@ -11,6 +13,14 @@ public class TaskDTO {
     private int priority;
 
     private TaskState state;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
