@@ -6,6 +6,7 @@ import br.com.udemy.tasks.model.Task;
 import br.com.udemy.tasks.model.TaskState;
 import br.com.udemy.tasks.service.TaskService;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -38,8 +39,15 @@ public class TaskController {
     }
 
     @PostMapping
-    public Mono<TaskDTO> createTask(@RequestBody Task task) {
-        return taskService.insert(task)
+    public Mono<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
+        return taskService.insert(converter.convert(taskDTO))
                 .map(converter::convert);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> delete(@PathVariable String id) {
+        return Mono.just(id)
+                .flatMap(taskService::deleteById);
     }
 }
