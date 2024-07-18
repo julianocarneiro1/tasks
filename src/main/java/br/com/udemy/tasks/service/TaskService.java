@@ -34,12 +34,12 @@ public class TaskService {
         return taskCustomRepository.findPaginated(task, pageNumber, pageSize);
     }
 
+    public Mono<Void> deleteById(String id) {
+        return Mono.fromRunnable(() -> taskRepository.deleteById(id));
+    }
+
     private Mono<Task> save(Task task) {
         return Mono.just(task)
                 .map(taskRepository::save);
-    }
-
-    public Mono<Void> deleteById(String id) {
-        return Mono.fromRunnable(() -> taskRepository.deleteById(id));
     }
 }
