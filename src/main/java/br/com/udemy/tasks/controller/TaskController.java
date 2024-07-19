@@ -5,16 +5,18 @@ import br.com.udemy.tasks.controller.dto.TaskDTO;
 import br.com.udemy.tasks.model.Task;
 import br.com.udemy.tasks.model.TaskState;
 import br.com.udemy.tasks.service.TaskService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/task")
 public class TaskController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TaskController.class);
 
     private final TaskService taskService;
 
@@ -41,6 +43,7 @@ public class TaskController {
     @PostMapping
     public Mono<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
         return taskService.insert(converter.convert(taskDTO))
+                .doOnNext(it -> LOGGER.info("Saved task with id {}", it.getId()))
                 .map(converter::convert);
     }
 
@@ -48,6 +51,7 @@ public class TaskController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> delete(@PathVariable String id) {
         return Mono.just(id)
+                .doOnNext(it -> LOGGER.info("Removing task with id {}", it))
                 .flatMap(taskService::deleteById);
     }
 }

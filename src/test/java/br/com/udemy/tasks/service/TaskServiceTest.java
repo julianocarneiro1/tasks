@@ -4,14 +4,11 @@ import br.com.udemy.tasks.model.Task;
 import br.com.udemy.tasks.repository.TaskCustomRepository;
 import br.com.udemy.tasks.repository.TaskRepository;
 import br.com.udemy.tasks.utils.TestUtils;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.test.StepVerifier;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
