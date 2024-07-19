@@ -1,8 +1,9 @@
 package br.com.udemy.tasks.controller;
 
 import br.com.udemy.tasks.controller.converter.TaskDTOConverter;
+import br.com.udemy.tasks.controller.converter.TaskInsertDTOConverter;
 import br.com.udemy.tasks.controller.dto.TaskDTO;
-import br.com.udemy.tasks.model.Task;
+import br.com.udemy.tasks.controller.dto.TaskInsertDTO;
 import br.com.udemy.tasks.model.TaskState;
 import br.com.udemy.tasks.service.TaskService;
 import org.slf4j.Logger;
@@ -22,10 +23,14 @@ public class TaskController {
 
     private final TaskDTOConverter converter;
 
+    private final TaskInsertDTOConverter insertDTOConverter;
+
     public TaskController(TaskService taskService,
-                          TaskDTOConverter converter) {
+                          TaskDTOConverter converter,
+                          TaskInsertDTOConverter insertDTOConverter) {
         this.taskService = taskService;
         this.converter = converter;
+        this.insertDTOConverter = insertDTOConverter;
     }
 
     @GetMapping
@@ -41,8 +46,8 @@ public class TaskController {
     }
 
     @PostMapping
-    public Mono<TaskDTO> createTask(@RequestBody TaskDTO taskDTO) {
-        return taskService.insert(converter.convert(taskDTO))
+    public Mono<TaskDTO> createTask(@RequestBody TaskInsertDTO taskInsertDTO) {
+        return taskService.insert(insertDTOConverter.convert(taskInsertDTO))
                 .doOnNext(it -> LOGGER.info("Saved task with id {}", it.getId()))
                 .map(converter::convert);
     }
