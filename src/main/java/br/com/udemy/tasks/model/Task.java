@@ -1,6 +1,5 @@
 package br.com.udemy.tasks.model;
 
-import br.com.udemy.tasks.service.TaskService;
 import org.springframework.data.annotation.Id;
 
 public class Task {
