@@ -36,17 +36,17 @@ public class TaskService {
                 .doOnError(error -> LOGGER.error("Error while saving task with title: {}", task.getTitle(), error));
     }
 
-    public Page<Task> findPaginated(Task task, Integer pageNumber, Integer pageSize) {
+    public Mono<Page<Task>> findPaginated(Task task, Integer pageNumber, Integer pageSize) {
         return taskCustomRepository.findPaginated(task, pageNumber, pageSize);
     }
 
     public Mono<Void> deleteById(String id) {
-        return Mono.fromRunnable(() -> taskRepository.deleteById(id));
+        return taskRepository.deleteById(id);
     }
 
     private Mono<Task> save(Task task) {
         return Mono.just(task)
                 .doOnNext(it -> LOGGER.info("Saving task with title {}", it.getTitle()))
-                .map(taskRepository::save);
+                .flatMap(taskRepository::save);
     }
 }

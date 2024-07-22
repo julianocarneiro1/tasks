@@ -45,7 +45,7 @@ public class TaskControllerTest {
         Task task = new Task();
         Page<Task> page = new PageImpl<>(Collections.singletonList(task), PageRequest.of(0, 1), 1);
 
-        when(service.findPaginated(any(), anyInt(), anyInt())).thenReturn(page);
+        when(service.findPaginated(any(), anyInt(), anyInt())).thenReturn(Mono.just(page));
 
         WebTestClient client = WebTestClient.bindToController(controller).build();
 
