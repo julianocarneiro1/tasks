@@ -1,6 +1,7 @@
 package br.com.udemy.tasks.service;
 
 import br.com.udemy.tasks.controller.TaskController;
+import br.com.udemy.tasks.exception.TaskNotFoundException;
 import br.com.udemy.tasks.model.Task;
 import br.com.udemy.tasks.repository.TaskCustomRepository;
 import br.com.udemy.tasks.repository.TaskRepository;
@@ -38,6 +39,14 @@ public class TaskService {
 
     public Mono<Page<Task>> findPaginated(Task task, Integer pageNumber, Integer pageSize) {
         return taskCustomRepository.findPaginated(task, pageNumber, pageSize);
+    }
+
+    public Mono<Task> update(Task task) {
+        return taskRepository.findById(task.getId())
+                .map(task::update)
+                .flatMap(taskRepository::save)
+                .switchIfEmpty(Mono.error(TaskNotFoundException::new))
+                .doOnError(error -> LOGGER.error("Error while updating task with id: {}. Message: {}", task.getId(), error.getMessage()));
     }
 
     public Mono<Void> deleteById(String id) {
