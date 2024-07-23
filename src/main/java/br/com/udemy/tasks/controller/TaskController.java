@@ -73,4 +73,10 @@ public class TaskController {
                 .doOnNext(it -> LOGGER.info("Removing task with id {}", it))
                 .flatMap(taskService::deleteById);
     }
+
+    @PostMapping("/start")
+    public Mono<TaskDTO> start(@RequestParam String id, @RequestParam String zipCode) {
+        return taskService.start(id, zipCode)
+                .map(converter::convert);
+    }
 }

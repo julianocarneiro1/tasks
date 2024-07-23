@@ -73,6 +73,10 @@ public class Task {
         return state;
     }
 
+    public Address getAddress() {
+        return address;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
