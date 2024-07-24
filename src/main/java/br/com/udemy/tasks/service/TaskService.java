@@ -73,6 +73,13 @@ public class TaskService {
                 .doOnError(error -> LOGGER.error("Error while starting task with id: {}. Message: {}", id, error.getMessage()));
     }
 
+    public Mono<Task> done(Task task) {
+        return Mono.just(task)
+                .doOnNext(it -> LOGGER.info("Finishing task with id {}", task.getId()))
+                .map(Task::done)
+                .flatMap(taskRepository::save);
+    }
+
     private Mono<Task> updateAddress(Task task, Address address) {
         return Mono.just(task)
                 .map(it -> task.updateAddress(address));
