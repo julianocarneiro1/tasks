@@ -2,6 +2,7 @@ package br.com.udemy.tasks.service;
 
 import br.com.udemy.tasks.controller.TaskController;
 import br.com.udemy.tasks.exception.TaskNotFoundException;
+import br.com.udemy.tasks.messaging.TaskNotificationProducer;
 import br.com.udemy.tasks.model.Address;
 import br.com.udemy.tasks.model.Task;
 import br.com.udemy.tasks.repository.TaskCustomRepository;
@@ -27,12 +28,15 @@ public class TaskService {
 
     private final AddressService addressService;
 
+    private final TaskNotificationProducer taskNotificationProducer;
+
     public TaskService(TaskRepository taskRepository,
                        TaskCustomRepository taskCustomRepository,
-                       AddressService addressService) {
+                       AddressService addressService, TaskNotificationProducer taskNotificationProducer) {
         this.taskRepository = taskRepository;
         this.taskCustomRepository = taskCustomRepository;
         this.addressService = addressService;
+        this.taskNotificationProducer = taskNotificationProducer;
     }
 
     public Mono<Task> insert(Task task) {
@@ -64,6 +68,7 @@ public class TaskService {
                 .flatMap(it -> updateAddress(it.getT1(), it.getT2()))
                 .map(Task::start)
                 .flatMap(taskRepository::save)
+                .flatMap(taskNotificationProducer::sendNotification)
                 .switchIfEmpty(Mono.error(TaskNotFoundException::new))
                 .doOnError(error -> LOGGER.error("Error while starting task with id: {}. Message: {}", id, error.getMessage()));
     }
