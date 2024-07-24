@@ -3,6 +3,8 @@ package br.com.udemy.tasks.controller.dto;
 import br.com.udemy.tasks.model.Address;
 import br.com.udemy.tasks.model.TaskState;
 
+import java.time.LocalDate;
+
 public class TaskDTO {
 
     private String id;
@@ -16,6 +18,8 @@ public class TaskDTO {
     private TaskState state;
 
     private Address address;
+
+    private LocalDate created;
 
     public String getId() {
         return id;
@@ -63,5 +67,13 @@ public class TaskDTO {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public LocalDate getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDate created) {
+        this.created = created;
     }
 }

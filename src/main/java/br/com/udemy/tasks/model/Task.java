@@ -2,6 +2,8 @@ package br.com.udemy.tasks.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.time.LocalDate;
+
 public class Task {
 
     @Id
@@ -17,6 +19,8 @@ public class Task {
 
     private Address address;
 
+    private LocalDate created;
+
     public Task() {
     }
 
@@ -27,11 +31,13 @@ public class Task {
         this.priority = builder.priority;
         this.state = builder.state;
         this.address = builder.address;
+        this.created = builder.created;
     }
 
     public Task insert() {
         return builderFrom(this)
                 .withState(TaskState.INSERT)
+                .withCreated(LocalDate.now())
                 .build();
     }
 
@@ -59,6 +65,16 @@ public class Task {
                 .build();
     }
 
+    public Task createdNow() {
+        return builderFrom(this)
+                .withCreated(LocalDate.now())
+                .build();
+    }
+
+    public boolean createdIsEmpty() {
+        return this.created == null;
+    }
+
     public String getId() {
         return id;
     }
@@ -83,6 +99,10 @@ public class Task {
         return address;
     }
 
+    public LocalDate getCreated() {
+        return created;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -104,6 +124,8 @@ public class Task {
         private TaskState state;
 
         private Address address;
+
+        private LocalDate created;
 
         public Builder() {
         }
@@ -144,6 +166,11 @@ public class Task {
 
         public Builder withAddress(Address address) {
             this.address = address;
+            return this;
+        }
+
+        public Builder withCreated(LocalDate created) {
+            this.created = created;
             return this;
         }
 

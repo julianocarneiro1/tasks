@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -77,6 +78,13 @@ public class TaskService {
         return Mono.just(task)
                 .doOnNext(it -> LOGGER.info("Finishing task with id {}", task.getId()))
                 .map(Task::done)
+                .flatMap(taskRepository::save);
+    }
+
+    public Flux<Task> refreshCreated() {
+        return taskRepository.findAll()
+                .filter(Task::createdIsEmpty)
+                .map(Task::createdNow)
                 .flatMap(taskRepository::save);
     }
 
