@@ -81,6 +81,15 @@ public class TaskService {
                 .flatMap(taskRepository::save);
     }
 
+    public Mono<List<Task>> doneMany(List<String> ids) {
+        return Flux.fromIterable(ids)
+                .flatMap(id -> taskRepository.findById(id)
+                        .map(Task::done)
+                        .flatMap(taskRepository::save)
+                        .doOnNext(it -> LOGGER.info("Done task with id {}", it.getId()))
+                ).collectList();
+    }
+
     public Flux<Task> refreshCreated() {
         return taskRepository.findAll()
                 .filter(Task::createdIsEmpty)
